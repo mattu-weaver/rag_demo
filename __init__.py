@@ -1,3 +1,0 @@
-"""
-RAG Document Processing Package
-"""
