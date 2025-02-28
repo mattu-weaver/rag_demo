@@ -8,7 +8,7 @@ from utils import count_pdf_files, path_exists
 from utils.embeddings import DocumentEmbedder
 from config import FAISS_DB_PATH
 from .base_page import StreamlitPage
-
+from typing import Dict
 
 class UploadPage(StreamlitPage):
     """
@@ -23,7 +23,7 @@ class UploadPage(StreamlitPage):
         """
         return "Upload Documents"
 
-    def render_page(self) -> None:
+    def render_page(self, cfg_: Dict[str, any]) -> None:
         """
         Base class implementation to render this page.
         """
@@ -53,7 +53,7 @@ class UploadPage(StreamlitPage):
                 step=10,
                 help="Number of characters to overlap between chunks"
             )
-            
+
             show_samples = st.checkbox(
                 "Show Sample Chunks",
                 value=False,
@@ -63,7 +63,8 @@ class UploadPage(StreamlitPage):
         st.title("PDF Folder Analyzer")
 
         # Textbox for folder path input
-        folder_path = st.text_input("Enter the path to a local folder:")
+        text_default = cfg_['coding_defaults']['pdf_folder']
+        folder_path = st.text_input("Enter the path to a local folder:", value=text_default)
 
         # Add button to run tests
         if st.button("Process Files"):

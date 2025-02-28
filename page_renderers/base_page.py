@@ -2,7 +2,7 @@
 Base abstract class for Streamlit pages
 """
 from abc import ABC, abstractmethod
-
+from typing import Dict
 
 class StreamlitPage(ABC):
     """Abstract base class that all Streamlit pages must inherit from."""
@@ -19,7 +19,7 @@ class StreamlitPage(ABC):
 
 
     @abstractmethod
-    def render_page(self) -> None:
+    def render_page(self, cfg: Dict[str, any]) -> None:
         """
         Renders the page content in Streamlit.
         This method must be implemented by all page classes.

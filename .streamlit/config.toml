@@ -1,3 +1,4 @@
+[logger]
 # Logging levels for loguru
 # TRACE (most verbose)
 # DEBUG
@@ -6,7 +7,9 @@
 # WARNING
 # ERROR
 # CRITICAL (most severe)
-[logger]
 level = 'INFO'
 format = '{time:YYYY MM DD HH:MM:SS} | {level} | {module} | {function} | Line {line} | {message}'
 log_name = 'app_log'
+
+[coding_defaults]
+pdf_folder = '/Users/matthewweaver/Review'

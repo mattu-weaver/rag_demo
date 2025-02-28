@@ -6,4 +6,5 @@ from .home_page import HomePage
 from .upload_page import UploadPage
 from .query_page import QueryPage
 
+
 __all__ = ['StreamlitPage', 'HomePage', 'UploadPage', 'QueryPage']

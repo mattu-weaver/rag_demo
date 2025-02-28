@@ -16,7 +16,9 @@ class ConfigLoader:
     def __init__(self, config_file: str):
         self.config_file = config_file
 
-    def load_config(self) -> Dict:
+        
+
+    def load_config(self) -> Dict[str, any]:
         """Loads config from file"""
         return toml.load(self.config_file)
 
@@ -50,6 +52,7 @@ class LoggerConfigurator:
             "ERROR",
             "CRITICAL",
         }
+
         return level.upper() in valid_levels
 
     def configure_logger(self, log_file: str, log_format: str, log_level: str) -> Logger:
@@ -86,19 +89,4 @@ class LoggerConfigurator:
         return logger
     
 
-class AppConfig:
-    """
-    Aggregates application configuration and manages the logger.
-    """
-    def __init__(self, config_loader: ConfigLoader, logger_configurator: LoggerConfigurator):
-        self.config_loader = config_loader
-        self.logger_configurator = logger_configurator
-        self.config = self.config_loader.load_config()
-        self.log_cfg = self.config["logger"]
-        self.log_level = self.log_cfg["level"]
-        self.log_format = self.log_cfg["format"]
-        self.log_name = self.log_cfg["log_name"]
-    
-    def setup_logging(self) -> Logger:
-        """Sets up the logger"""
-        return self.logger_configurator.configure_logger(self.log_name, self.log_format, self.log_level)
+

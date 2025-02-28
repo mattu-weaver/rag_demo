@@ -3,7 +3,7 @@ Query page implementation
 """
 import streamlit as st
 from .base_page import StreamlitPage
-
+from typing import Dict
 
 class QueryPage(StreamlitPage):
     """
@@ -18,7 +18,7 @@ class QueryPage(StreamlitPage):
         """        
         return "Query Documents"
 
-    def render_page(self) -> None:
+    def render_page(self, cfg_: Dict[str, any]) -> None:
         st.title("Query Documents")
         query = st.text_input("Enter your question:")
         st.write("Ask questions about your documents")

@@ -3,6 +3,7 @@ Home page implementation
 """
 import streamlit as st
 from .base_page import StreamlitPage
+from typing import Dict
 
 
 class HomePage(StreamlitPage):
@@ -18,7 +19,7 @@ class HomePage(StreamlitPage):
         """
         return "Home"
 
-    def render_page(self) -> None:
+    def render_page(self, cfg_: Dict[str, any]) -> None:
         st.title("Document RAG System")
         st.write("Welcome to the RAG Document Processing System")
         st.markdown("""
