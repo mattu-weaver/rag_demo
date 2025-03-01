@@ -23,12 +23,15 @@ class ConfigLoader:
         return toml.load(self.config_file)
 
 
-class LoggerConfigurator:
+class LogLoader:
     """
     Configures the application logger.
     """
 
     def __init__(self, log_folder: str = "logs", log_retention_days: int = 10):
+        """
+        Constructor for the LogLoader class.
+        """
         self.log_folder = log_folder
         self.log_retention_days = log_retention_days
         self._validate_log_folder()
@@ -42,7 +45,7 @@ class LoggerConfigurator:
         """
         Validate the logging level string.
         :param level: The log level string to check.
-        :return: True if valid, False otherwise
+        Returns: True if valid, False otherwise
         """
         valid_levels = {
             "TRACE",
@@ -56,17 +59,12 @@ class LoggerConfigurator:
 
         return level.upper() in valid_levels
 
-    def configure_logger(
-        self, log_file: str, log_format: str, log_level: str
-    ) -> Logger:
+    def configure_logger(self, log_file: str, log_format: str, log_level: str) -> Logger:
         """
         Configures logging for the application.
-
-        Args:
-            log_file (str): The log file name.
-            log_format (str): The log format.
-            log_level (str): The log level.
-
+        param log_file (str): The log file name.
+        param log_format (str): The log format.
+        param log_level (str): The log level.
         Returns: Logger: Configured logger instance.
         Raises: ValueError: If the provided log level is invalid.
         """

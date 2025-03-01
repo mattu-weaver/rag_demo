@@ -7,8 +7,10 @@ from page_renderers import StreamlitPage
 class PageManager:
     """Manages the available pages and their display."""
 
-    def __init__(self, page_dict: Dict[str, Type[StreamlitPage]], cfg: Dict[str, any]):
+    def __init__(self, page_dict: Dict[str, Type[StreamlitPage]], cfg_: Dict[str, any]):
         self.pages = page_dict
+        self.cfg = cfg_
+
 
     def set_global_sidebar_widgets(self) -> str:
         """Displays page navigation in the sidebar."""
