@@ -63,6 +63,7 @@ class DocumentEmbedder:
         # Remove existing database if it exists
         if os.path.exists(db_path):
             shutil.rmtree(db_path)
+            logger.info(f"Removed existing database at {db_path}")
             
         all_chunks = []
         pdf_files = Path(folder_path).glob("*.pdf")
@@ -76,11 +77,15 @@ class DocumentEmbedder:
                 logger.error(f"Error processing {pdf_file}: {str(e)}")
                 
         if not all_chunks:
+            logger.error("No valid chunks were generated from the PDFs")
             raise ValueError("No valid chunks were generated from the PDFs")
+
             
-        # Create directory if it doesn't exist
-        os.makedirs(db_path, exist_ok=True)
-            
+        # Create directory if it doesn't exist   
+        log_dir = Path("database/faiss_db")
+        log_dir.mkdir(exist_ok=True, parents=True)
+
+
         # Create embeddings using the correct method
         texts = [chunk.page_content for chunk in all_chunks]
         embeddings = self.embeddings.embed_documents(texts)

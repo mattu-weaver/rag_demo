@@ -4,19 +4,19 @@ Handles application configuration.
 
 import sys
 from pathlib import Path
+from typing import Dict
 import toml
 from loguru import logger
 from loguru._logger import Logger
-from typing import Dict
+
 
 class ConfigLoader:
     """
     Loads configuration from a TOML file.
     """
+
     def __init__(self, config_file: str):
         self.config_file = config_file
-
-        
 
     def load_config(self) -> Dict[str, any]:
         """Loads config from file"""
@@ -27,6 +27,7 @@ class LoggerConfigurator:
     """
     Configures the application logger.
     """
+
     def __init__(self, log_folder: str = "logs", log_retention_days: int = 10):
         self.log_folder = log_folder
         self.log_retention_days = log_retention_days
@@ -55,7 +56,9 @@ class LoggerConfigurator:
 
         return level.upper() in valid_levels
 
-    def configure_logger(self, log_file: str, log_format: str, log_level: str) -> Logger:
+    def configure_logger(
+        self, log_file: str, log_format: str, log_level: str
+    ) -> Logger:
         """
         Configures logging for the application.
 
@@ -87,6 +90,3 @@ class LoggerConfigurator:
         # Add stdout handler
         logger.add(sys.stdout, format=log_format, level=log_level.upper())
         return logger
-    
-
-

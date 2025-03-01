@@ -6,7 +6,6 @@ import streamlit as st
 from loguru import logger
 from utils import count_pdf_files, path_exists
 from utils.embeddings import DocumentEmbedder
-from config import FAISS_DB_PATH
 from .base_page import StreamlitPage
 from typing import Dict
 
@@ -105,7 +104,7 @@ class UploadPage(StreamlitPage):
                                         with st.expander(f"Chunk {i}"):
                                             st.text(chunk.page_content)
                             
-                            embedder.create_faiss_db(folder_path, str(FAISS_DB_PATH))
+                            embedder.create_faiss_db(folder_path, "database/faiss_db")
                             
                             st.success("Successfully created FAISS database!")
                         except Exception as e:
