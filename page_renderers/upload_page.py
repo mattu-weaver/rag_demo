@@ -2,12 +2,12 @@
 Document upload page implementation
 """
 from pathlib import Path
+from typing import Dict
 import streamlit as st
 from loguru import logger
 from utils import count_pdf_files, path_exists
 from utils.embeddings import DocumentEmbedder
 from .base_page import StreamlitPage
-from typing import Dict
 
 class UploadPage(StreamlitPage):
     """
@@ -34,7 +34,7 @@ class UploadPage(StreamlitPage):
                 value="all-MiniLM-L6-v2",
                 help="The model to use for embeddings."
             )
-            
+
             st.header("Chunking Parameters")
             chunk_size = st.slider(
                 "Chunk Size",
@@ -59,11 +59,10 @@ class UploadPage(StreamlitPage):
                 help="Display 2 random sample chunks after processing"
             )
 
-        st.title("PDF Folder Analyzer")
+        st.title("Embed PDF Documents")
 
         # Textbox for folder path input
-        text_default = cfg_['coding_defaults']['pdf_folder']
-        folder_path = st.text_input("Enter the path to a local folder:", value=text_default)
+        folder_path = st.text_input("Enter the path to a local folder:", value="hello")
 
         # Add button to run tests
         if st.button("Process Files"):
@@ -85,14 +84,14 @@ class UploadPage(StreamlitPage):
                                 return
 
                             st.info(f"Found {pdf_count} PDF file(s) in the folder.")
-                            
+
                             # Create embeddings and FAISS database
                             embedder = DocumentEmbedder(
                                 chunk_size=chunk_size,
                                 chunk_overlap=chunk_overlap,
                                 model_name=model_name
                             )
-                            
+
                             # Process first PDF to show samples if requested
                             if show_samples:
                                 first_pdf = next(Path(folder_path).glob("*.pdf"))
@@ -103,14 +102,17 @@ class UploadPage(StreamlitPage):
                                     for i, chunk in enumerate(chunks[:2], 1):
                                         with st.expander(f"Chunk {i}"):
                                             st.text(chunk.page_content)
-                            
+
                             embedder.create_faiss_db(folder_path, "database/faiss_db")
-                            
+
                             st.success("Successfully created FAISS database!")
                         except Exception as e:
                             st.error(f"Error processing documents: {str(e)}")
                             logger.error(f"Error during document processing: {str(e)}")
                 else:
                     st.warning("Please enter a folder path.")
-                    logger.warning("The Process Files button was clicked but no folder path was provided.")
-
+                    message = (
+                            "The Process Files button on the upload documents "
+                            "page was clicked but no folder path was provided."
+                        )
+                    logger.warning(message)

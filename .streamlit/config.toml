@@ -13,3 +13,4 @@ log_name = 'app_log'
 
 [coding_defaults]
 pdf_folder = '/Users/matthewweaver/Review'
+db_folder = 'database/faiss_db'
