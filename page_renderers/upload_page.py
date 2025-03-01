@@ -62,7 +62,8 @@ class UploadPage(StreamlitPage):
         st.title("Embed PDF Documents")
 
         # Textbox for folder path input
-        folder_path = st.text_input("Enter the path to a local folder:", value="hello")
+        default_folder = cfg_["pdf-details"]["pdf_folder"]
+        folder_path = st.text_input("Enter the path to a local folder:", value=default_folder)
 
         # Add button to run tests
         if st.button("Process Files"):
@@ -89,24 +90,29 @@ class UploadPage(StreamlitPage):
                             embedder = DocumentEmbedder(
                                 chunk_size=chunk_size,
                                 chunk_overlap=chunk_overlap,
-                                model_name=model_name
+                                model_name=model_name,
+                                cfg=cfg_
                             )
+
+                            embed_file_pattern = cfg_["pdf-details"]["embed_file_pattern"]
 
                             # Process first PDF to show samples if requested
                             if show_samples:
-                                first_pdf = next(Path(folder_path).glob("*.pdf"))
+                                chunk_display_count = cfg_["pdf-details"]["chunk_display_count"]
+                                first_pdf = next(Path(folder_path).glob(embed_file_pattern))
                                 chunks = embedder.process_pdf(str(first_pdf))
-                                if len(chunks) >= 2:
+                                if len(chunks) >= chunk_display_count:
                                     st.subheader("Sample Chunks")
                                     st.info(f"From file: {first_pdf.name}")
-                                    for i, chunk in enumerate(chunks[:2], 1):
+                                    for i, chunk in enumerate(chunks[:chunk_display_count], 1):
                                         with st.expander(f"Chunk {i}"):
                                             st.text(chunk.page_content)
 
-                            embedder.create_faiss_db(folder_path, "database/faiss_db")
+                            db_folder = cfg_["databases"]["db_folder"]
+                            embedder.create_faiss_db(folder_path, db_folder)
 
                             st.success("Successfully created FAISS database!")
-                        except Exception as e:
+                        except Exception as e:  # pylint: disable=W0718
                             st.error(f"Error processing documents: {str(e)}")
                             logger.error(f"Error during document processing: {str(e)}")
                 else:

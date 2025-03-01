@@ -19,7 +19,8 @@ class DocumentEmbedder:
         self,
         chunk_size: int = 1000,
         chunk_overlap: int = 200,
-        model_name: str = "all-MiniLM-L6-v2"
+        model_name: str = "all-MiniLM-L6-v2",
+        cfg: dict[str, any] = None
     ):
         """
         Initialize the document embedder.
@@ -36,6 +37,7 @@ class DocumentEmbedder:
             model_kwargs={'device': 'cpu'}
         )
 
+        self.cfg = cfg
         logger.info(f"The model being used to create embeddings is {model_name}.")
         logger.info("The device being used to create embeddings is cpu.")       
 
@@ -66,14 +68,15 @@ class DocumentEmbedder:
             logger.info(f"Removed existing database at {db_path}")
 
         all_chunks = []
-        pdf_files = Path(folder_path).glob("*.pdf")
+        embed_file_pattern = self.cfg["pdf-details"]["embed_file_pattern"]
+        pdf_files = Path(folder_path).glob(embed_file_pattern)
 
         for pdf_file in pdf_files:
             try:
                 chunks = self.process_pdf(str(pdf_file))
                 all_chunks.extend(chunks)
                 logger.info(f"Processed {pdf_file}")
-            except Exception as e:
+            except Exception as e: # pylint: disable=W0718
                 logger.error(f"Error processing {pdf_file}: {str(e)}")
 
         if not all_chunks:
@@ -81,7 +84,8 @@ class DocumentEmbedder:
             raise ValueError("No valid chunks were generated from the PDFs")
 
         # Create directory if it doesn't exist   
-        log_dir = Path("database/faiss_db")
+        db_folder = self.cfg["databases"]["db_folder"]
+        log_dir = Path(db_folder)
         log_dir.mkdir(exist_ok=True, parents=True)
 
         # Create embeddings using the correct method
@@ -92,9 +96,13 @@ class DocumentEmbedder:
         # Initialize FAISS index
         dimension = len(embeddings[0])
         index = faiss.IndexFlatL2(dimension)
-        index.add(embeddings_array)  
-        faiss.write_index(index, str(Path(db_path) / "index.faiss"))
+        index.add(embeddings_array)  #pylint: disable=E1120
+        
+        faiss_index = self.cfg["databases"]["faiss_db_index"]
+        
+        faiss.write_index(index, str(Path(db_path) / faiss_index))
 
         # Save the documents for later retrieval
-        np.save(str(Path(db_path) / "documents.npy"), all_chunks)
+        docs = self.cfg["databases"]["docs"]
+        np.save(str(Path(db_path) / docs), all_chunks)
         logger.info(f"Created FAISS database at {db_path}")
