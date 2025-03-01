@@ -32,7 +32,8 @@ class UploadPage(StreamlitPage):
             model_name = st.text_input(
                 "Embedding Model",
                 value="all-MiniLM-L6-v2",
-                help="The model to use for embeddings."
+                help="The model to use for embeddings.",
+                disabled=cfg_["pages"]["embedding_model_readonly"]
             )
 
             st.header("Chunking Parameters")

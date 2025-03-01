@@ -8,7 +8,7 @@ from pathlib import Path
 import faiss
 import numpy as np
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.document_loaders import PyPDFLoader
+from langchain_community.document_loaders import PyPDFLoader
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from loguru import logger
 

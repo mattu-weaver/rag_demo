@@ -21,3 +21,7 @@ pdf_folder = '/Users/matthewweaver/Review'
 chunk_display_count = 2
 embed_file_pattern = '*.pdf'
 default_folder = '/Users/matthewweaver/Review'
+
+[pages]
+embedding_model_readonly = true
+show_extracted_pdf_chunks = true

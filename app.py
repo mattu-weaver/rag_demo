@@ -49,7 +49,7 @@ def main(cfg_: Dict[str, any], logger_configurator_: LogLoader, page_manager_: P
 
 if __name__ == "__main__":
     # Dependency Injection in action!
-    config_loader = ConfigLoader(".streamlit/config.toml")
+    config_loader = ConfigLoader("config/config.toml")
     cfg = config_loader.load_config()
 
     logger_configurator = LogLoader()
